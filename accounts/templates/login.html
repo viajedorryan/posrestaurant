@@ -1,0 +1,35 @@
+{% extends 'account_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+    <div class="login-box-body">
+        <p class="login-box-msg">Sign in to start your transaction</p>
+        
+        {% if form.errors %}
+            <p style="color: red">Please enter a correct username and password. Note that both fields are case-sensitive.</p>
+        {% endif %}
+        <form class="site-form" action="{% url 'accounts:login' %}" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}<br>
+                    {{ field }}<br>
+                    {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                    {% if field.help_text %}
+                    <p><small style="color: grey">{{ field.help_text }}</small></p>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <div class="row">
+                <div class="col-xs-8">
+                    <a href="{% url 'accounts:signup' %}">Register a new staff</a>
+                </div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

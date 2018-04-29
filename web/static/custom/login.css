@@ -1,0 +1,4 @@
+.site-form p>input#id_username,
+.site-form p>input#id_password {
+    width: 100% !important;
+}
