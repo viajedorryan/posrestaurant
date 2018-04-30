@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 # function based view
@@ -28,7 +31,10 @@ def login_view(request):
             # log in the user
             user = form.get_user()
             login(request, user)
-            return redirect('accounts:signup')
+            if request.user.is_superuser:
+                return HttpResponseRedirect(reverse('admin:index'))
+            else:
+                return redirect('restaurants:home')
     else:
         form = AuthenticationForm()
     context = {'form':form}

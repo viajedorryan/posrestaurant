@@ -3,10 +3,10 @@ from . import views
 
 # Create your views here.
 # function based view
-def home(request):
-    template='dashboard.html'
-    context = {}
-    return render(request, template, context)
+# def home(request):
+#     template='dashboard.html'
+#     context = {}
+#     return render(request, template, context)
 
 # def properties(request):
 #     template='properties.html'
