@@ -1,0 +1,10 @@
+{% extends 'dine.html'%}
+{% load static from staticfiles %}
+
+{% block food_content %}
+
+    {% for salad in salads %}
+        <a class="btn btn-app">{{ salad }}</a>
+    {% endfor %}
+
+{% endblock %}

@@ -8,3 +8,6 @@ from .models import *
 admin.site.register(ProductCategory)
 admin.site.register(Printer)
 admin.site.register(Product)
+admin.site.register(Branch)
+admin.site.register(POSSetting)
+admin.site.register(SalesTransactionSummary)

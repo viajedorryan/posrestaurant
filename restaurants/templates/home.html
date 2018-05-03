@@ -4,38 +4,91 @@
 {% block content %}
 <div class="content-wrapper">
     <div class="container-fluid">
-        <section class="content-header">
+        <section class="content-header text-center">
             <h1>
-                Home
+                CHOOSE A STORE
             </h1>
-            <ol class="breadcrumb">
-                <li class="active"><a href="{% url 'restaurants:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            </ol>
         </section>
 
         <section class="content">
-            <div class="callout callout-info">
-                <h4>Tip!</h4>
+            <div class="row">
+                {% for branch in branches %}
+                    <div class="col-md-3">
+            
+                        <!-- Profile Image -->
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                <img class="profile-user-img img-responsive img-circle" src="{% static 'dist/img/store.png' %}" alt="User profile picture">
+                
+                                <h3 class="profile-username text-center">{{branch.branchName}}</h3>
+                
+                                <p class="text-muted text-center">{{branch.branchAddress}}</p>
+                                {% if checks == None %}
+                                    <p class="text-center"><span class="badge bg-red">close</span></p>
+                                    <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-setCashBegin"><b>SET CASH BEGIN</b></a>
+                                {% else %}
+                                    <p class="text-center"><span class="badge bg-green">open</span></p>
+                                    <a href="{% url 'restaurants:dine' %}" class="btn btn-primary btn-block"><b>PROCEED</b></a>
+                                {% endif %}
 
-                <p>Add the layout-top-nav class to the body tag to get this layout. This feature can also be used with a
-                sidebar! So use this class if you want to remove the custom dropdown menus from the navbar and use regular
-                links instead.</p>
-            </div>
-            <div class="callout callout-danger">
-                <h4>Warning!</h4>
-
-                <p>The construction of this layout differs from the normal one. In other words, the HTML markup of the navbar
-                and the content will slightly differ than that of the normal layout.</p>
-            </div>
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Blank Box</h3>
-                </div>
-                <div class="box-body">
-                    The great content goes here
-                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                {% endfor %}
             </div>
         </section>
+
+        <div class="modal fade" id="modal-setCashBegin">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Set Cash Begin of the Day</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:dine' %}" method="post"><!-- {% url 'accounts:login' %} -->
+                    {% csrf_token %}
+                        <div class="modal-body">
+                            {% for branch in branches %}
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="datenow">Date</label>
+                                        <input type="text" class="form-control" id="datenow" value="{{ time|date:"SHORT_DATE_FORMAT" }}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="branchcode">Branch Code</label>
+                                        <input name ="branchcode" type="text" class="form-control" id="branchcode" value="{{branch.branchCode}}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="branchname">Branch Name</label>
+                                        <input name ="branchname" type="text" class="form-control" id="branchname" value="{{branch.branchName}}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cashbegin">Cash Beginning Amount</label>
+                                        <!-- <input type="text" class="form-control" id="cashbegin" placeholder="Enter Cash Beginning Amount"> -->
+                                        <div class="input-group">
+                                        <span class="input-group-addon">₱</span>
+                                        <input name ="cashbegin" id="cashbegin" type="number" class="form-control" placeholder="Enter Cash Beginning Amount">
+                                        <span class="input-group-addon">.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
     </div>
 </div>
 {% endblock %}

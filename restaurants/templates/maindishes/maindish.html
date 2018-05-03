@@ -1,0 +1,10 @@
+{% extends 'dine.html'%}
+{% load static from staticfiles %}
+
+{% block food_content %}
+
+    {% for maindish in maindishes %}
+        <a class="btn btn-app" value="{{ maindish.id }}">{{ maindish }}</a>
+    {% endfor %}
+
+{% endblock %}

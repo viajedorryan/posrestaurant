@@ -41,53 +41,61 @@
                                     <td><span class="badge bg-red">55%</span></td>
                                 </tr>
                             </table>
+                            <br>
+                            <hr>
                         </div>
                         <!-- /.box-body -->
-                        <div class="box-footer clearfix">
-                            <ul class="pagination pagination-sm no-margin pull-right">
-                                <li><a href="#">&laquo;</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">&raquo;</a></li>
-                            </ul>
+                    </div>
+                    <!-- /.box -->
+
+                    
+                    <div class="box">
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width:50%">Subtotal:</th>
+                                    <td>₱</td>
+                                </tr>
+                                <tr>
+                                    <th>Tax (12%)</th>
+                                    <td>₱</td>
+                                </tr>
+                                <tr>
+                                    <th>Discount:</th>
+                                    <td>N/A</td>
+                                </tr>
+                                <tr>
+                                    <th>Total:</th>
+                                    <td class="text-success"><strong>₱</strong></td>
+                                </tr>
+                            </table>
+                            <br>
+                            <hr>
                         </div>
+                        <!-- /.box-body -->
                     </div>
                     <!-- /.box -->
                 </div>
                 <!-- ======================================================================================== -->
                 <div class="col-md-7">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            {% for category in categories %}
-                                <li><a href="#{{ category.description }}" data-toggle="tab">{{ category.description }}</a></li>
-                            {% endfor %}
-                            <!-- <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
-                            <li><a href="#settings" data-toggle="tab">Settings</a></li> -->
-                        </ul>
-                        <div class="tab-content"> 
-                            <div class="active tab-pane" id="Beverages">
-                                {% for beverage in beverages %}
-                                    <button type="button" class="btn btn-block btn-default">{{ beverage }}</button>
-                                {% endfor %}
-                            </div>
-                            <div class="active tab-pane" id="Appetizer">
-                                {% for appetizer in appetizers %}
-                                <button type="button" class="btn btn-block btn-default">{{ appetizer }}</button>
-                                {% endfor %}
-                            </div>
-                            <div class="active tab-pane" id="Salad">
-                                {% for salad in salads %}
-                                <button type="button" class="btn btn-block btn-default">{{ salad }}</button>
-                                {% endfor %}
-                            </div> 
-                            <div class="active tab-pane" id="MainDish">
-                                {% for maindish in maindishes %}
-                                <button type="button" class="btn btn-block btn-default">{{ maindish }}</button>
-                                {% endfor %}
-                            </div>
+                    <div class="box">
+                            <ul class="nav nav-justified">
+                                <!-- {% for category in categories %}
+                                    <li><a href="#{{ category.description }}" data-toggle="tab">{{ category.description }}</a></li>
+                                {% endfor %} -->
+                                <li><a href="{% url 'restaurants:main' %}" class="btn btn-default">Main Dish</a></li>
+                                <li><a href="{% url 'restaurants:beverage' %}" class="btn btn-default">Beverages</a></li>
+                                <li><a href="{% url 'restaurants:salad' %}" class="btn btn-default">Salads</a></li>
+                                <li><a href="{% url 'restaurants:appetizer' %}" class="btn btn-default">Appetizers</a></li>
+                            </ul>
+                        <div class="box-body">
+                            {% block food_content %}
+
+                            {% endblock %}
                         </div>
+                        <!-- /.box-body -->
                     </div>
+                    <!-- /.box -->
                 </div>
             </div>
         </section>
