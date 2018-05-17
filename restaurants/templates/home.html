@@ -28,7 +28,7 @@
                                     <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modal-setCashBegin"><b>SET CASH BEGIN</b></a>
                                 {% else %}
                                     <p class="text-center"><span class="badge bg-green">open</span></p>
-                                    <a href="{% url 'restaurants:dine' %}" class="btn btn-primary btn-block"><b>PROCEED</b></a>
+                                    <a href="{% url 'restaurants:dines' %}" class="btn btn-primary btn-block"><b>PROCEED</b></a>
                                 {% endif %}
 
                             </div>
@@ -48,7 +48,7 @@
                         <span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title">Set Cash Begin of the Day</h4>
                     </div>
-                    <form class="site-form" action="{% url 'restaurants:dine' %}" method="post"><!-- {% url 'accounts:login' %} -->
+                    <form class="site-form" action="{% url 'restaurants:cashin' %}" method="post"><!-- {% url 'accounts:login' %} -->
                     {% csrf_token %}
                         <div class="modal-body">
                             {% for branch in branches %}

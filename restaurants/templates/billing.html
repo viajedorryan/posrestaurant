@@ -1,0 +1,194 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <section class="content-header text-center">
+            <h1><strong>DINE-IN BILLING</strong></h1>
+            <h1><span class="label label-info"><strong>Table {{tables}}</strong></span></h1>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="col-md-4">
+                        <h3>
+                            <strong>Order #:</strong>
+                            <strong class="text-danger">{{ totalOrderSummaries }}</strong>
+                        </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>
+                            <strong>Trans ID:</strong>
+                            <strong class="text-success"> {{ getSalesTransactionSummary }}</strong>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="box box-primary" style="height: 600px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">List of Orders</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px">Particulars</th>
+                                        <th style="width: 80px">Unit Price</th>
+                                        <th>Qty</th>
+                                        <th>Amount</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if tempOrderDetailpages %}
+                                        {% for tempOrderDetailpage in tempOrderDetailpages %}
+                                            <tr>
+                                                <td>{{ tempOrderDetailpage.description }}</td>
+                                                <td>{{ tempOrderDetailpage.sellingPrice }}</td>
+                                                <td>{{ tempOrderDetailpage.qtySold | floatformat }}</td>
+                                                <td>{{ tempOrderDetailpage.totalAmount }}</td>
+                                                <td>
+                                                    <div>
+                                                        <!-- <form class="site-form" action="{% url 'restaurants:cancelfoodmenu' %}" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="tableNo" value="{{tempOrderDetailpage.tableNo}}">
+                                                            <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
+                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
+                                                            <button type="submit" class="btn btn-info btn-xs pull-left"><i class="fa fa-fw fa fa-pencil"></i></button>
+                                                        </form> -->
+                                                        <a href="#modal-maindish" class="main btn btn-info btn-xs pull-left" data-toggle="modal"data-name="{{ tempOrderDetailpage.referenceNo }}" data-id="{{tempOrderDetailpage.id}}"><i class="fa fa-fw fa fa-pencil"></i></a>
+                                                    </div>
+                                                    <div>
+                                                        <form class="site-form" action="{% url 'restaurants:cancelfoodmenu' %}" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="tableNo" value="{{tempOrderDetailpage.tableNo}}">
+                                                            <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
+                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
+                                                            <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-trash"></i></button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td>no orders</td>
+                                            <td>no orders</td>
+                                            <td>no orders</td>
+                                            <td>no orders</td>
+                                            <td>no orders</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                        
+                        <div class="box-footer clearfix">
+                            {% if tempOrderDetailpages.has_other_pages %}
+                                <ul class="pagination pagination-sm no-margin pull-right">
+                                    {% if tempOrderDetailpages.has_previous %}
+                                        <li><a href="?page={{ tempOrderDetailpages.previous_page_number }}">&laquo;</a></li>
+                                    {% else %}
+                                        <li class="disabled"><span>&laquo;</span></li>
+                                    {% endif %}
+                                    {% for i in tempOrderDetailpages.paginator.page_range %}
+                                        {% if tempOrderDetailpages.number == i %}
+                                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        {% else %}
+                                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if tempOrderDetailpages.has_next %}
+                                        <li><a href="?page={{ tempOrderDetailpages.next_page_number }}">&raquo;</a></li>
+                                    {% else %}
+                                        <li class="disabled"><span>&raquo;</span></li>
+                                    {% endif %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- /.box -->
+                    <div class="col-lg-12">
+                        <div class="col-md-6">
+                            <h3 class="pull-left">
+                                <strong>Total Items: {{ totalitems }}</strong>
+                            </h3>
+                        </div>
+                        <div class="col-md-6">
+                            <h3 class="pull-right">
+                                <strong>Total Amount: {{totalamount}}</strong>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="col-md-6">
+                            <h4>VAT Sale: {{ totalVATsale | floatformat:2 }}</h4>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>VAT Exempt Sale: 0.00</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="col-md-6">
+                            <h4>VAT: {{ totalVAT | floatformat:2 }}</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="box box-primary" style="height: 700px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Payment Info</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <form class="site-form" action="{% url 'restaurants:payment' %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="amountpayable">Amount Payable:</label>
+                                        <input type="amountpayable" class="form-control" name="amountpayable" id="amountpayable" value="{{totalamount}}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="amounttender">Amount Tender:</label>
+                                        <input type="number" class="form-control" name="amounttender" id="amounttender" placeholder="Amount Tender" value="0.00" autofocus>
+                                        {% if messages %}
+                                                {% for message in messages %}
+                                                    <p class="text-danger">*{{ message }}</p>
+                                                {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="col-sm-4">
+                                        <a href="{% url 'restaurants:dines' %}" type="button" class="btn btn-danger btn-lg btn-block margin-bottom">CANCEL</a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <a href="" type="button" class="btn btn-primary btn-lg btn-block margin-bottom">GENERATE BILL</a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <input type="hidden" name="tableNo" value="{{tables}}">
+                                            <input type="hidden" name="transCode" value="{{getSalesTransactionSummary}}">
+                                            <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
+                                            <button type="submit" class="btn btn-success btn-lg btn-block margin-bottom">PAYMENT</button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+

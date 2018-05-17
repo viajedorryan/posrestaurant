@@ -1,0 +1,31 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    {% include 'includes/_nav_restaurant.html' %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for table in tables %}
+                <div class="col-sm-4 col-md-2">
+                    <div class="thumbnail">
+                        <div class="caption text-center">
+                            <h3 class="no-padding no-margin"><strong>{{ table.tableNo }}</strong></h3>
+                        </div>
+                        {% if table.tableStatus == 'Available' %}
+                            <a href="{% url 'restaurants:dine' tableNo=table.tableNo %}"><img src="{% static 'dist/img/table.png' %}" alt="..."></a>
+                        {% endif %}
+                        {% if table.tableStatus == 'Occupied' %}
+                            <a href="{% url 'restaurants:billing' tableNo=table.tableNo %}"><img src="{% static 'dist/img/table_occupied.png' %}" alt="..."></a>
+                        {% endif %}
+                        <!--<div class="caption text-center">-->
+                            <!--<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

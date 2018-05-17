@@ -3,18 +3,10 @@
 
 {% block content %}
 <div class="content-wrapper">
-    {% include 'includes/_nav_restaurant.html' %}
     <div class="container-fluid">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible no-margin" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h4>{{ message }}</h4>
-                </div>
-            {% endfor %}
-        {% endif %}
-        <section class="content-header text-center no-margin">
-            <h1 class="no-margin"><strong>TAKEOUT</strong></h1>
+        <section class="content-header text-center">
+            <h1><strong>DINE-IN </strong></h1>
+            <h1><span class="label label-info"><strong>Table {{tables}}</strong></span></h1>
         </section>
 
         <section class="content">
@@ -30,6 +22,12 @@
                         <h3>
                             <strong>Trans ID:</strong>
                             <strong class="text-success"> {{ getSalesTransactionSummary }}</strong>
+                        </h3>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>
+                            <strong>Ref #:</strong>
+                            <strong class="text-primary"> {{ totalTempOrderSummaries }}</strong>
                         </h3>
                     </div>
                 </div>
@@ -69,15 +67,14 @@
                                                             <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
                                                             <button type="submit" class="btn btn-info btn-xs pull-left"><i class="fa fa-fw fa fa-pencil"></i></button>
                                                         </form> -->
-                                                        <a href="#modal-maindish" class="main btn btn-info btn-xs pull-left" data-toggle="modal"data-name="{{ tempOrderDetailpage.orderNo }}" data-id="{{tempOrderDetailpage.id}}"><i class="fa fa-fw fa fa-pencil"></i></a>
+                                                        <a href="#modal-maindish" class="main btn btn-info btn-xs pull-left" data-toggle="modal"data-name="{{ tempOrderDetailpage.referenceNo }}" data-id="{{tempOrderDetailpage.id}}"><i class="fa fa-fw fa fa-pencil"></i></a>
                                                     </div>
                                                     <div>
-                                                        <form class="site-form" action="{% url 'restaurants:canceltakeoutfoodmenu' %}" method="post">
+                                                        <form class="site-form" action="{% url 'restaurants:cancelfoodmenu' %}" method="post">
                                                             {% csrf_token %}
-                                                            <input type="hidden" name="idno" value="{{ tempOrderDetailpage.id }}">
-                                                            <!-- <input type="hidden" name="orderNo" value="{{ tempOrderDetailpage.orderNo }}">
-                                                            <input type="hidden" name="transID" value="{{ tempOrderDetailpage.transactionCode }}">
-                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}"> -->
+                                                            <input type="hidden" name="tableNo" value="{{tempOrderDetailpage.tableNo}}">
+                                                            <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
+                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
                                                             <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-trash"></i></button>
                                                         </form>
                                                     </div>
@@ -150,10 +147,15 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="col-sm-6">
-                            <a href="" type="button" class="btn btn-primary btn-lg btn-block margin-bottom">GENERATE BILL</a>
+                            <a href="{% url 'restaurants:dines' %}" type="button" class="btn btn-danger btn-lg btn-block margin-bottom">CANCEL</a>
                         </div>
                         <div class="col-sm-6">
-                            <a href="#modal-payment" class="payment btn btn-success btn-lg btn-block margin-bottom" data-toggle="modal"data-name="{{ getSalesTransactionSummary }}" data-id="{{ totalOrderSummaries }}">PAYMENT</a>
+                            <form class="site-form" action="{% url 'restaurants:savefoodmenu' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="tableNo" value="{{tables}}">
+                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                <button type="submit" class="btn btn-success btn-lg btn-block margin-bottom">SAVE</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -170,10 +172,10 @@
                             {% if menu.menuCategory == 'MAIN DISH' %}
                             <div class="col-sm-3">
                                 <!-- <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:takeoutfoodmenu' %}" method="post">
+                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
-                                    <input type="hidden" name="transID" value="{{ getSalesTransactionSummary }}">
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
                                     <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
                                     <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
                                     <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
@@ -188,10 +190,10 @@
                             {% if menu.menuCategory == 'BEVERAGES' %}
                             <div class="col-sm-3">
                                 <!-- <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-beverages"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:takeoutfoodmenu' %}" method="post">
+                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
-                                    <input type="hidden" name="transID" value="{{ getSalesTransactionSummary }}">
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
                                     <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
                                     <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
                                     <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
@@ -206,10 +208,10 @@
                             {% if menu.menuCategory == 'SOUPS' %}
                             <div class="col-sm-3">
                                 <!-- <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-soups"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:takeoutfoodmenu' %}" method="post">
+                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
-                                    <input type="hidden" name="transID" value="{{ getSalesTransactionSummary }}">
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
                                     <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
                                     <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
                                     <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
@@ -225,6 +227,8 @@
             </div>
         </section>
     
+    
+
         <div class="modal fade" id="modal-maindish">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -232,55 +236,16 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     </div>
-                    <form class="site-form" action="{% url 'restaurants:edittakeoutfoodmenu' %}" method="post">
+                    <form class="site-form" action="{% url 'restaurants:editfoodmenu' %}" method="post">
                         {% csrf_token %}
                         <div class="modal-body">
                                 <div class="box-body">
                                     <input type="hidden" name="id" class="form-control" id="id" value="" readonly>
                                     <input type="hidden" name="ref" class="form-control" id="ref" value="" readonly>
+                                    <input type="hidden" name="tableno" class="form-control" value="{{tables}}" readonly>
                                     <div class="form-group">
                                         <label for="qty">Qty</label>
                                         <input type="text" name="qty" class="form-control">
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                            <input type="submit" class="btn btn-primary" value="Submit"></input>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-    
-        <div class="modal fade" id="modal-payment">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    </div>
-                    <form class="site-form" action="{% url 'restaurants:paytakeoutfoodmenu' %}" method="post">
-                        {% csrf_token %}
-                        <div class="modal-body">
-                                <div class="box-body">
-                                    <input type="hidden" name="orderNo" class="form-control" id="orderNo" value="" readonly>
-                                    <input type="hidden" name="transID" class="form-control" id="transID" value="" readonly>
-                                    <div class="form-group">
-                                        <label for="amountpayable">Amount Payable:</label>
-                                        <input type="text" name="amountpayable" class="form-control" value="{{totalamount}}" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="amounttender">Amount Tender:</label>
-                                        <input type="number" class="form-control" name="amounttender" id="amounttender" placeholder="Amount Tender" value="0.00" autofocus>
-                                        {% if messages %}
-                                                {% for message in messages %}
-                                                    <p class="text-danger">*{{ message }}</p>
-                                                {% endfor %}
-                                        {% endif %}
                                     </div>
                                 </div>
                         </div>

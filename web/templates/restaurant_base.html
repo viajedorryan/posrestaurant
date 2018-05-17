@@ -54,9 +54,6 @@
                     <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
                         <ul class="nav navbar-nav">
                             <li><a href="{% url 'restaurants:home' %}"><i class="fa fa-credit-card"></i> POS</a></li>
-                            <!-- <li><a href="{% url 'restaurants:dine' %}">Dine</a></li>
-                            <li><a href="{% url 'restaurants:takeout' %}">Take Out</a></li>
-                            <li><a href="{% url 'restaurants:delivery' %}">Delivery</a></li> -->
                         </ul>
                     </div>
 
@@ -110,6 +107,60 @@
     <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{% static 'dist/js/demo.js' %}"></script>
+    <script>
+        $(document).on("click", ".main", function () {
+            var id = $(this).data('id');
+            var refno = $(this).data('name');
+            $(".modal-body #id").val( id );
+            $(".modal-body #ref").val( refno );
+            // As pointed out in comments, 
+            // it is superfluous to have to manually call the modal.
+            // $('#addBookDialog').modal('show');
+        });
+        $(document).on("click", ".payment", function () {
+            var orderno = $(this).data('id');
+            var transid = $(this).data('name');
+            $(".modal-body #orderNo").val( orderno );
+            $(".modal-body #transID").val( transid );
+            // As pointed out in comments, 
+            // it is superfluous to have to manually call the modal.
+            // $('#addBookDialog').modal('show');
+        });
+    </script>
+    <script>
+        $('.btn-number').click(function(e){
+            e.preventDefault();
+            
+            fieldName = $(this).attr('data-field');
+            type      = $(this).attr('data-type');
+            var input = $("input[name='"+fieldName+"']");
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                if(type == 'minus') {
+                    
+                    if(currentVal > input.attr('min')) {
+                        input.val(currentVal - 1).change();
+                    } 
+                    if(parseInt(input.val()) == input.attr('min')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                } else if(type == 'plus') {
+
+                    if(currentVal < input.attr('max')) {
+                        input.val(currentVal + 1).change();
+                    }
+                    if(parseInt(input.val()) == input.attr('max')) {
+                        $(this).attr('disabled', true);
+                    }
+
+                }
+            } else {
+                input.val(0);
+            }
+        });
+    </script>
+    
 {% endblock %}
 
 </body>
