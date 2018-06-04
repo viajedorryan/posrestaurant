@@ -177,16 +177,19 @@
                     <tr>
                         <td colspan="2">Date: {{ today | date:"d-M-Y D H:i:s A" }}</td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td></td>
-                    </tr>
-                    <tr>
+                    </tr> -->
+                    <!-- <tr>
                         <td  colspan="2" class="text-center"><strong>TABLE #: {{ tableno }}</strong></td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
-        <p>------------------------------------------------------------</p>
+        <p class="text-center">------------------------------------------------------------<br>
+            <strong>TABLE #: {{ tableno }}</strong><br>
+            ------------------------------------------------------------
+        </p>
         <table class="table1">
             <tbody>
             {% for item in items %}

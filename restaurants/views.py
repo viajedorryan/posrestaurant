@@ -851,6 +851,7 @@ def savefoodmenu_view(request):
             saveTempRestaurantOrderSummary.save()
             RestaurantTable.objects.filter(tableNo=tableno, isVat=False).update(tableStatus='Occupied', isVat=True)
     return redirect('restaurants:dines')
+    # return HttpResponseRedirect('/restaurants/downloaddine/'+tableno+'/'+refno)
 
 @login_required(login_url="/accounts/login/")
 def cancelfoodmenu_view(request):
@@ -1264,8 +1265,10 @@ def closetransaction_view(request):
                 cashremit = 0
             else:
                 cashremit = getsalesinfo.cashRemitted
-
-    getdifferences = cashremit - gettotalcash
+    if cashremit:
+        getdifferences = cashremit - gettotalcash
+    else:
+        getdifferences = 0
 
     template='closetransaction.html'
     context = {'cashinhand':cashinhand,'timeopen':timeopen,'gettotalcash':gettotalcash,'gettransactioncode':gettransactioncode,'cashremit':cashremit,'getdifferences':getdifferences,'gettotalqty':gettotalqty}
@@ -1644,18 +1647,18 @@ def generateBill(request):
             'user': user
         }
 
-    # return render_to_pdf('bill.html', params)
+    return render_to_pdf('bill.html', params)
     # ===================================================
     # os.startfile("C:/POSTransaction/Restaurant/Billing/10001.txt", "print")
     # print('==================================================')
     # print(os.getcwd())
-    pdf = render_to_pdf('bill.html', params)
-    response =  HttpResponse(pdf, content_type='application/pdf')
-    filename = "Billing_%s.pdf" %(orderno)
-    # filename = "Invoice.pdf"
-    content = "attachment; filename='%s'" %(filename)
-    response['Content-Disposition'] = content
-    return response
+    # pdf = render_to_pdf('bill.html', params)
+    # response =  HttpResponse(pdf, content_type='application/pdf')
+    # filename = "Billing_%s.pdf" %(orderno)
+    # # filename = "Invoice.pdf"
+    # content = "attachment; filename='%s'" %(filename)
+    # response['Content-Disposition'] = content
+    # return response
 
      
 
@@ -1860,3 +1863,137 @@ def sample_view(request):
         print(possetting.companyName)
         print(companyName)
         print(possetting.companyName.rjust(int(companyName), '0'))
+
+# DOWNLOAD Section================================================================================
+@login_required(login_url="/accounts/login/")
+def downloaddine_view(request, tableNo, refNo):
+    dirname = 'C:/Users/RND-03/Documents/djangoprojects/posrestaurant/posrestaurant/web/static/Orders'
+    if not os.path.exists(dirname):
+        os.mkdir(os.path.join(dirname))
+
+    tableno         = tableNo
+    orderno         = refNo
+
+    print(tableno)
+    print(orderno)
+
+    possettings = POSSetting.objects.all()
+    getOrderDetailsLists = TempRestaurantOrderDetail.objects.filter(referenceNo=orderno, isVat=True, isCancelled=False, isVoid=False)
+    totalamount = TempRestaurantOrderDetail.objects.filter(referenceNo=orderno, isVat=True, isCancelled=False, isVoid=False).aggregate(sum=Sum('totalAmount'))['sum']
+    totalitems = TempRestaurantOrderDetail.objects.filter(referenceNo=orderno, isVat=True, isCancelled=False, isVoid=False).aggregate(sum=Sum('qtySold'))['sum']
+
+    if not totalamount:
+        totalamount = 0
+    totalVATsale = float(totalamount) / 1.12
+    totalVAT = totalVATsale * 0.12
+
+    if not tableno:
+        tableno = 'TAKEOUT'
+
+    today = timezone.now()
+    user = request.user.username
+    params = {
+            'possettings':possettings,
+            'orderno':orderno,
+            'today': today,
+            'tableno': tableno,
+            'items': getOrderDetailsLists,
+            'totalamount': totalamount,
+            'totalitems': totalitems,
+            'totalVATsale': totalVATsale,
+            'totalVAT': totalVAT,
+            'user': user
+        }
+    # return render_to_pdf('bill.html', params)
+
+    pdf = render_to_pdf('printorders.html', params)
+    response =  HttpResponse(pdf, content_type='application/pdf')
+    filename = "Order_%s.pdf" %(orderno)
+    # filename = "Invoice.pdf"
+    content = "attachment; filename='%s'" %(filename)
+    response['Content-Disposition'] = content
+    return response
+    
+    # return redirect('restaurants:dines')
+
+@login_required(login_url="/accounts/login/")
+def printdine_view(request):
+    dirname = 'C:/Users/RND-03/Documents/djangoprojects/posrestaurant/posrestaurant/web/static/Orders'
+    if not os.path.exists(dirname):
+        os.mkdir(os.path.join(dirname))
+
+    tableno         = request.POST.get("tableNo") 
+    # orderno         = request.POST.get("refNo") 
+
+    print(tableno)
+    # print(orderno)
+
+    possettings = POSSetting.objects.all()
+    getOrderDetailsLists = TempRestaurantOrderDetail.objects.filter(tableNo=tableno, isVat=True, isCancelled=False, isVoid=False)
+    totalamount = TempRestaurantOrderDetail.objects.filter(tableNo=tableno, isVat=True, isCancelled=False, isVoid=False).aggregate(sum=Sum('totalAmount'))['sum']
+    totalitems = TempRestaurantOrderDetail.objects.filter(tableNo=tableno, isVat=True, isCancelled=False, isVoid=False).aggregate(sum=Sum('qtySold'))['sum']
+
+    for getOrderDetailsList in getOrderDetailsLists:
+        orderno = getOrderDetailsList.referenceNo
+    if not totalamount:
+        totalamount = 0
+    totalVATsale = float(totalamount) / 1.12
+    totalVAT = totalVATsale * 0.12
+
+    if not tableno:
+        tableno = 'TAKEOUT'
+
+    today = timezone.now()
+    user = request.user.username
+    params = {
+            'possettings':possettings,
+            'orderno':orderno,
+            'today': today,
+            'tableno': tableno,
+            'items': getOrderDetailsLists,
+            'totalamount': totalamount,
+            'totalitems': totalitems,
+            'totalVATsale': totalVATsale,
+            'totalVAT': totalVAT,
+            'user': user
+        }
+    return render_to_pdf('printorders.html', params)
+
+@login_required(login_url="/accounts/login/")
+def printtakeout_view(request):
+
+    tableno         = request.POST.get("tableNo") 
+    orderno         = request.POST.get("refNo") 
+
+    print(tableno)
+    print(orderno)
+
+    possettings = POSSetting.objects.all()
+    getOrderDetailsLists = RestaurantOrderDetail.objects.filter(orderNo=orderno, isVat=False, isCancelled=False, isVoid=False)
+    totalamount = RestaurantOrderDetail.objects.filter(orderNo=orderno, isVat=False, isCancelled=False, isVoid=False).aggregate(sum=Sum('totalAmount'))['sum']
+    totalitems = RestaurantOrderDetail.objects.filter(orderNo=orderno, isVat=False, isCancelled=False, isVoid=False).aggregate(sum=Sum('qtySold'))['sum']
+
+    if not totalamount:
+        totalamount = 0
+    totalVATsale = float(totalamount) / 1.12
+    totalVAT = totalVATsale * 0.12
+
+    if not tableno:
+        tableno = 'TAKEOUT'
+
+    today = timezone.now()
+    user = request.user.username
+    params = {
+            'possettings':possettings,
+            'orderno':orderno,
+            'today': today,
+            'tableno': tableno,
+            'items': getOrderDetailsLists,
+            'totalamount': totalamount,
+            'totalitems': totalitems,
+            'totalVATsale': totalVATsale,
+            'totalVAT': totalVAT,
+            'user': user
+        }
+    return render_to_pdf('printorders.html', params)
+# END DOWNLOAD Section============================================================================

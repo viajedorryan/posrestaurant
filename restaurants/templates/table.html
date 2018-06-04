@@ -60,6 +60,14 @@
                                     <button type="submit" class="btn btn-danger btn-lg btn-block margin-bottom">TRANSACTION VOID</button>
                                 </form>
                             </div>
+                            <!-- <div class="col-sm-12">
+                                <form class="site-form" action="{% url 'restaurants:printdine' %}" method="post" target="_blank">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                    <button type="submit" class="btn btn-app btn-block no-margin bg-blue">PRINT ORDERS TO KITCHEN</button>
+                                </form>
+                            </div> -->
                         </div>
                     </div>
                 </div>

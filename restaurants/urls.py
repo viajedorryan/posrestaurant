@@ -72,6 +72,9 @@ urlpatterns = [
     path('bill/', views.generateBill, name='bill'),
     path('generatereceipt/', views.generateReceipt, name='generatereceipt'),
     path('generatebill/', views.generate_bill, name='generatebill'),
+    path('downloaddine/<int:tableNo>/<int:refNo>/', views.downloaddine_view, name='downloaddine'),
+    path('printdine/', views.printdine_view, name='printdine'),
+    path('printtakeout/', views.printtakeout_view, name='printtakeout'),
 
     # REPORTS
     path('reports/', views.reports_view, name='reports'),

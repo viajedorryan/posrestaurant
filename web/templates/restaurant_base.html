@@ -175,6 +175,13 @@
     {% endif %}
     
     <script>
+        function printorders() {
+            var objFra = document.getElementById('myFrame');
+            objFra.contentWindow.focus();
+            objFra.contentWindow.print();
+        }
+    </script>
+    <script>
         var $submit = $('.nav-discount ');
         $checkbox = $('input[type=checkbox]');
 

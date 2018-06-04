@@ -26,10 +26,16 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-md-4">
-                        </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-6">
+                        <form class="site-form" action="{% url 'restaurants:printdine' %}" method="post" target="_blank">
+                            {% csrf_token %}
+                            <input type="hidden" name="tableNo" value="{{tables}}">
+                            <!-- <input type="hidden" name="refNo" value="{{ totalOrderSummaries }}"> -->
+                            <button type="submit" class="btn btn-warning btn-md btn-block">PRINT ORDERS TO KITCHEN</button>
+                        </form>
+                    </div>
                     <div class="col-md-4">
                         <a href="#modal-transfer" class="transfer btn bg-navy btn-md btn-block pull-right no-margin" data-toggle="modal" data-id="{{tables}}"><i class="fa fa-fw fa fa-pencil"></i> TRANSFER TABLE</a>
                     </div>
@@ -129,7 +135,6 @@
                         <div class="col-md-6">
                             <h3 class="pull-left">
                                 <strong>Total Items: {{ totalitems }}</strong>
-                                <a href="javascript:window.print()">Print</a>
                             </h3>
                         </div>
                         <div class="col-md-6">
@@ -225,7 +230,7 @@
                                     </div>
                             </form>
                                     <div class="col-sm-4">
-                                        <form class="site-form" action="{% url 'restaurants:bill' %}" method="post"media="print">
+                                        <form class="site-form" action="{% url 'restaurants:bill' %}" method="post" target="_blank">
                                         {% csrf_token %}
                                             <input type="hidden" name="tableNo" value="{{tables}}">
                                             <input type="hidden" name="transCode" value="{{getSalesTransactionSummary}}">

@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="content-wrapper">
-    {% include 'includes/_nav_restaurant.html' %}
+    <!-- {% include 'includes/_nav_restaurant.html' %} -->
     <div class="container-fluid">
         {% if messages %}
             {% for message in messages %}
@@ -54,6 +54,13 @@
                                     <input type="hidden" name="refNo" value="{{ totalOrderSummaries }}">
                                     <input type="hidden" name="transCode" value="{{ getSalesTransactionSummary }}">
                                     <button type="submit" class="btn btn-danger btn-lg btn-block margin-bottom">TRANSACTION VOID</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-12">
+                                <form class="site-form" action="{% url 'restaurants:printtakeout' %}" method="post" target="_blank">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="refNo" value="{{ totalOrderSummaries }}">
+                                    <button type="submit" class="btn btn-app btn-block no-margin bg-blue">PRINT ORDERS TO KITCHEN</button>
                                 </form>
                             </div>
                         </div>
