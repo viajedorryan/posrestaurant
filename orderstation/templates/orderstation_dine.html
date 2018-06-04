@@ -1,0 +1,93 @@
+{% extends 'orderstation_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    {% include 'includes/_nav_orderstation.html' %}
+    <div class="container-fluid">
+        <section class="content-header text-center no-margin">
+            <h1 class="no-margin"><strong>DINE IN</strong></h1>
+            {% if messages %}
+                    {% for message in messages %}
+                        <p class="text-danger">*{{ message }}</p>
+                    {% endfor %}
+            {% endif %}
+            <!-- <a href="{% url 'restaurants:sample' %}" type="button" class="btn btn-warning btn-lg btn-block margin-bottom">sample</a> -->
+        </section>
+        <section class="content">
+            <div class="row">
+                {% for table in tables %}
+                    <div class="col-sm-4 col-md-2">
+                        <div class="thumbnail">
+                            <div class="caption text-center">
+                                <h3 class="no-padding no-margin"><strong>{{ table.tableNo }}</strong></h3>
+                            </div>
+                            {% if table.tableStatus == 'Available' %}
+                                <!-- <a href="{% url 'restaurants:dine' tableNo=table.tableNo %}"><img src="{% static 'dist/img/table.png' %}" alt="..."></a> -->
+                                <a href="#modal-order" class="order" data-toggle="modal" data-id="{{table.tableNo}}"><img src="{% static 'dist/img/table.png' %}" alt="..."></a>
+                            {% endif %}
+                            {% if table.tableStatus == 'Occupied' %}
+                                <a href="#"><img src="{% static 'dist/img/table_occupied.png' %}" alt="..."></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+        </section>
+
+        <div class="modal fade" id="modal-order">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="text-center text-bold">ORDER STATION</h3>
+                    </div>
+                    <form class="site-form" action="{% url 'orderstations:checkwaiter' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                        <div id='calc-contain'>
+                                                    <input type="hidden" name="tableno" id="tableno"value=""/>
+                                                    <input type="password" name="answer" />
+                                                    <br>
+                                                    
+                                                    <input type="button" value=" 1 " onclick="answer.value += '1'" />
+                                                    <input type="button" value=" 2 " onclick="answer.value += '2'" />
+                                                    <input type="button" value=" 3 " onclick="answer.value += '3'" />
+                            
+        
+                                                    <input type="button" value=" 4 " onclick="answer.value += '4'" />
+                                                    <input type="button" value=" 5 " onclick="answer.value += '5'" />
+                                                    <input type="button" value=" 6 " onclick="answer.value += '6'" />
+                            
+
+                                                    <input type="button" value=" 7 " onclick="answer.value += '7'" />
+                                                    <input type="button" value=" 8 " onclick="answer.value += '8'" />
+                                                    <input type="button" value=" 9 " onclick="answer.value += '9'" />
+                            
+
+                                                    <input type="button" value=" clear " onclick="answer.value = ''" />
+                                                    <input type="button" value=" 0 " onclick="answer.value += '0'" />
+                                                    <input type="submit" class="submit" value="Submit"></input>
+                                                    </br>
+                                        
+                                                <!-- <div id="agh">
+                                                  <p>Adrian Gheorghe Calc
+                                                </div> -->
+                                              </div>
+                                </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div> -->
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+</div>
+{% endblock %}
+

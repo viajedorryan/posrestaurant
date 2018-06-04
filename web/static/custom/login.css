@@ -1,7 +1,15 @@
 .site-form p>input#id_username,
-.site-form p>input#id_password {
+.site-form p>input#id_password,
+.site-form p>input#id_password1,
+.site-form p>input#id_password2 {
     width: 100% !important;
 }
 .login-page, .register-page {
     background: #43c5a9 !important;
+}
+
+img.itcsi {
+    width: 350px !important;
+    height: auto !important;
+    margin-bottom: -20px;
 }

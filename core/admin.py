@@ -18,7 +18,7 @@ class POSSettingAdmin(admin.ModelAdmin):
     list_display = ('id', 'branchCode', 'posName', 'companyName', 'address1', 'address2', 'tinNo', 'minNo', 'birPermitNo', 'serialNo', 'isVat', 'date_created', 'date_updated')
 
 class RestaurantTableAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tableNo', 'tableName', 'tableStatus', 'addedBy', 'updatedBy', 'isVat', 'date_created', 'date_updated')
+    list_display = ('id', 'tableNo', 'tableName', 'tableStatus', 'addedBy', 'isVat', 'date_created', 'date_updated')
 
 class TempRestaurantOrderDetailAdmin(admin.ModelAdmin):
     list_display = ('id', 'referenceNo', 'isVat', 'date_created', 'date_updated')
@@ -32,6 +32,9 @@ class RestaurantOrderDetailAdmin(admin.ModelAdmin):
 class RestaurantOrderSummaryAdmin(admin.ModelAdmin):
     list_display = ('id', 'orderNo', 'referenceNo', 'transactionCode', 'isVat', 'date_created', 'date_updated')
 
+class WaiterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'waiterCode', 'waiterName', 'addedBy', 'isVat', 'date_created', 'date_updated')
+
 admin.site.register(FoodCategory, FoodCategoryAdmin)
 admin.site.register(Printer, PrinterAdmin)
 admin.site.register(FoodMenu, FoodMenuAdmin)
@@ -43,3 +46,4 @@ admin.site.register(TempRestaurantOrderDetail, TempRestaurantOrderDetailAdmin)
 admin.site.register(TempRestaurantOrderSummary, TempRestaurantOrderSummaryAdmin)
 admin.site.register(RestaurantOrderDetail, RestaurantOrderDetailAdmin)
 admin.site.register(RestaurantOrderSummary, RestaurantOrderSummaryAdmin)
+admin.site.register(Waiter, WaiterAdmin)

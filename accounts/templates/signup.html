@@ -1,22 +1,31 @@
-{% extends 'account_base.html'%}
+{% extends 'register_base.html'%}
 {% load static from staticfiles %}
 
-{% block account_content %}
-    <h1>Signup</h1>
-    <form class="site-form" action="{% url 'accounts:signup' %}" method="post">
-        {% csrf_token %}
-        {% for field in form %}
-          <p>
-            {{ field.label_tag }}<br>
-            {{ field }}
-            {% if field.help_text %}
-              <small style="color: grey">{{ field.help_text }}</small>
-            {% endif %}
-            {% for error in field.errors %}
-              <p style="color: red">{{ error }}</p>
-            {% endfor %}
-          </p>
+{% block content %}
+<div class="register-box-body"></div>
+<h1>Signup</h1>
+  <form class="site-form" action="{% url 'accounts:signup' %}" method="post">
+  {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
         {% endfor %}
-        <input type="submit" value="Signup">
-    </form>
+      </p>
+    {% endfor %}
+    <div class="row">
+        <div class="col-xs-8">
+            <a href="{% url 'accounts:signup' %}">Register a new staff</a>
+        </div>
+        <div class="col-xs-4 pull-right">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign Up</button>
+        </div>
+    </div>
+  </form>
+</div>
 {% endblock %}

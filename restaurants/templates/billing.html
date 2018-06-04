@@ -3,10 +3,10 @@
 
 {% block content %}
 <div class="content-wrapper">
-    <div class="container-fluid">
+    <div class="container">
         <section class="content-header text-center">
             <h1><strong>DINE-IN BILLING</strong></h1>
-            <h1><span class="label label-info"><strong>Table {{tables}}</strong></span></h1>
+            <h1><span class="label label-success"><strong>Table {{tables}}</strong></span></h1>
         </section>
 
         <section class="content">
@@ -25,12 +25,22 @@
                         </h3>
                     </div>
                 </div>
+                <div class="col-lg-6">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    <div class="col-md-4">
+                        <a href="#modal-transfer" class="transfer btn bg-navy btn-md btn-block pull-right no-margin" data-toggle="modal" data-id="{{tables}}"><i class="fa fa-fw fa fa-pencil"></i> TRANSFER TABLE</a>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="box box-primary" style="height: 600px;">
+                <div class="col-lg-7">
+                    <div class="box box-success" style="height: 550px;">
                         <div class="box-header with-border">
                             <h3 class="box-title">List of Orders</h3>
+                            <span><a href="#modal-additional" class="additional btn btn-primary btn-xs pull-right" data-toggle="modal"><i class="fa fa-fw fa fa-plus"></i> Additional</a></span>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -64,12 +74,13 @@
                                                         <a href="#modal-maindish" class="main btn btn-info btn-xs pull-left" data-toggle="modal"data-name="{{ tempOrderDetailpage.referenceNo }}" data-id="{{tempOrderDetailpage.id}}"><i class="fa fa-fw fa fa-pencil"></i></a>
                                                     </div>
                                                     <div>
-                                                        <form class="site-form" action="{% url 'restaurants:cancelfoodmenu' %}" method="post">
+                                                        <form class="site-form" action="{% url 'restaurants:cancelbillfoodmenu' %}" method="post">
                                                             {% csrf_token %}
+                                                            <input type="hidden" name="idno" value="{{tempOrderDetailpage.id}}">
                                                             <input type="hidden" name="tableNo" value="{{tempOrderDetailpage.tableNo}}">
                                                             <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
                                                             <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
-                                                            <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-trash"></i></button>
+                                                            <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-times"></i></button>
                                                         </form>
                                                     </div>
                                                 </td>
@@ -118,6 +129,7 @@
                         <div class="col-md-6">
                             <h3 class="pull-left">
                                 <strong>Total Items: {{ totalitems }}</strong>
+                                <a href="javascript:window.print()">Print</a>
                             </h3>
                         </div>
                         <div class="col-md-6">
@@ -140,8 +152,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-8">
-                    <div class="box box-primary" style="height: 700px;">
+                <div class="col-lg-5">
+                    <div class="box box-success" style="height: 700px;">
                         <div class="box-header with-border">
                             <h3 class="box-title">Payment Info</h3>
                         </div>
@@ -150,45 +162,297 @@
                             <form class="site-form" action="{% url 'restaurants:payment' %}" method="post">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="amountpayable">Amount Payable:</label>
-                                        <input type="amountpayable" class="form-control" name="amountpayable" id="amountpayable" value="{{totalamount}}" readonly>
+                                        <input type="text" class="form-control" name="amountpayable" id="amountpayable" value="{{totalamount}}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="amounttender">Amount Tender:</label>
-                                        <input type="number" class="form-control" name="amounttender" id="amounttender" placeholder="Amount Tender" value="0.00" autofocus>
+                                        <input type="number" class="form-control" name="amounttender" id="amounttender" placeholder="Amount Tender" value="0" autofocus>
                                         {% if messages %}
                                                 {% for message in messages %}
                                                     <p class="text-danger">*{{ message }}</p>
                                                 {% endfor %}
                                         {% endif %}
                                     </div>
+                                    <!-- <label id="discount">Add Discount:</label> -->
+                                    <div class="form-group">
+                                        <div class="checkbox text-bold">
+                                            <label>
+                                                <input type="checkbox">
+                                                Add Discount
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="nav-discount nav-tabs-custom">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a href="#senior" data-toggle="tab">Senior Citizen</a></li>
+                                            <li><a href="#others" data-toggle="tab">Others</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="active tab-pane" id="senior">
+                                                <div class="form-group">
+                                                    <label for="controlno">Control Number:</label>
+                                                    <input type="number" class="form-control" name="controlno" id="controlno" placeholder="Please input Control Number..." autofocus>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="seniorname">Name:</label>
+                                                    <input type="text" class="form-control" name="seniorname" id="seniorname" placeholder="Please input Senior Citizen Name..." autofocus>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="others">
+                                                <div class="form-group">
+                                                    <label for="othersdiscount">Amount:</label>
+                                                    <input type="number" class="form-control" name="othersdiscount" id="othersdiscount" placeholder="Please input Amount..." autofocus>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-12">
                                     <div class="col-sm-4">
-                                        <a href="{% url 'restaurants:dines' %}" type="button" class="btn btn-danger btn-lg btn-block margin-bottom">CANCEL</a>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <a href="" type="button" class="btn btn-primary btn-lg btn-block margin-bottom">GENERATE BILL</a>
+                                        <a href="{% url 'restaurants:dines' %}" type="button" class="btn btn-danger btn-md btn-block margin-bottom">BACK</a>
                                     </div>
                                     <div class="col-sm-4">
                                             <input type="hidden" name="tableNo" value="{{tables}}">
                                             <input type="hidden" name="transCode" value="{{getSalesTransactionSummary}}">
                                             <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
-                                            <button type="submit" class="btn btn-success btn-lg btn-block margin-bottom">PAYMENT</button>
+                                            <button type="submit" class="btn btn-success btn-md btn-block margin-bottom">PAYMENT</button>
+                                    </div>
+                            </form>
+                                    <div class="col-sm-4">
+                                        <form class="site-form" action="{% url 'restaurants:bill' %}" method="post"media="print">
+                                        {% csrf_token %}
+                                            <input type="hidden" name="tableNo" value="{{tables}}">
+                                            <input type="hidden" name="transCode" value="{{getSalesTransactionSummary}}">
+                                            <input type="hidden" name="orderNo" value="{{totalOrderSummaries}}">
+                                            <button type="submit" class="btn btn-primary btn-md btn-block margin-bottom">GENERATE BILL</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </div>
+
+        <div class="modal fade" id="modal-transfer">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Transfer Table</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:transfertable' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="fromtable">From Table:</label>
+                                        <input type="text" name="fromtable" id="tableno" class="form-control" value="{{tables}}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>To Table:</label>
+                                        <select class="form-control" name="totable">
+                                            <option selected disabled>Select Table to Transfer...</option>
+                                            {% for gettablelist in gettablelists %}
+                                                <option>{{ gettablelist.tableNo }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-maindish">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:editbillfoodmenu' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <input type="hidden" name="id" class="form-control" id="id" value="" readonly>
+                                    <input type="hidden" name="ref" class="form-control" id="ref" value="" readonly>
+                                    <input type="hidden" name="tableno" class="form-control" value="{{tables}}" readonly>
+                                    <div class="form-group">
+                                        <label for="qty">Qty</label>
+                                        <input type="text" name="qty" class="form-control">
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-additional">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <!-- <form class="site-form" action="{% url 'restaurants:editbillfoodmenu' %}" method="post">
+                        {% csrf_token %} -->
+                        <div class="modal-body">
+                                <div class="box-body" style="height: 500px; overflow-y: scroll;">
+                                    <!-- <div class="panel panel-primary">
+                                        <div class="panel-heading">Main Dish</div>
+                                        <div class="panel-body">
+                                            {% for menu in menus %}
+                                                {% if menu.menuCategory == 'MAIN DISH' %}
+                                                <div class="col-sm-6 margin-bottom">
+                                                    <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a>
+                                                    <form class="site-form" action="{% url 'restaurants:addbillfoodmenu' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                                        <input type="hidden" name="refNo" value="{{ getOrderno }}">
+                                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                        <button type="submit" class="btn btn-success btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Beverages</div>
+                                        <div class="panel-body">
+                                            {% for menu in menus %}
+                                                {% if menu.menuCategory == 'BEVERAGES' %}
+                                                <div class="col-sm-6 margin-bottom">
+                                                    <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-beverages"><b>{{ menu.foodMenu }}</b></a>
+                                                    <form class="site-form" action="{% url 'restaurants:addbillfoodmenu' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                                        <input type="hidden" name="refNo" value="{{ getOrderno }}">
+                                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                        <button type="submit" class="btn btn-success btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">Soups</div>
+                                        <div class="panel-body">
+                                            {% for menu in menus %}
+                                                {% if menu.menuCategory == 'SOUPS' %}
+                                                <div class="col-sm-6 margin-bottom">
+                                                    <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-soups"><b>{{ menu.foodMenu }}</b></a>
+                                                    <form class="site-form" action="{% url 'restaurants:addbillfoodmenu' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                                        <input type="hidden" name="refNo" value="{{ getOrderno }}">
+                                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                        <button type="submit" class="btn btn-success btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                     -->
+                                    {% for category in categories %}
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">{{category.categoryName}}</div>
+                                        <div class="panel-body">
+                                            {% for menu in menus %}
+                                                {% if menu.menuCategory == category.categoryName %}
+                                                <div class="col-sm-6 margin-bottom">
+                                                    <!-- <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a> -->
+                                                    <form class="site-form" action="{% url 'restaurants:addbillfoodmenu' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                                        <input type="hidden" name="refNo" value="{{ getOrderno }}">
+                                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                        <button type="submit" class="btn btn-app bg-green btn-block btn-lg btn-block text-center text-bold">{{ menu.foodMenu }}</button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                        </div>
+                        <!-- <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form> -->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-addremit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4>Add Total Cash to be Remitted</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:addcashremit' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <input type="hidden"  name="transcode" value="{{ gettransactioncode }}">
+                                        <label for="cashremit">Cash</label>
+                                        <input type="text" name="cashremit" id="cashremit" class="form-control" value="{{ cashremit }}" autofocus>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+</div>
 </div>
 {% endblock %}
 

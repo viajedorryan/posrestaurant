@@ -1,0 +1,50 @@
+{% extends 'orderstation_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container-fluid">
+        <section class="content-header text-center no-margin">
+            <h1 class="no-margin"><strong>ORDER STATION</strong></h1>
+            <!-- <a href="{% url 'restaurants:sample' %}" type="button" class="btn btn-warning btn-lg btn-block margin-bottom">sample</a> -->
+        </section>
+        <section class="content">
+            <div class="row">
+                <div id='calc-contain'>
+            
+                    <form name="calculator">
+                    
+                        <input type="text" name="answer" />
+                        <br>
+                        
+                        <input type="button" value=" 1 " onclick="calculator.answer.value += '1'" />
+                        <input type="button" value=" 2 " onclick="calculator.answer.value += '2'" />
+                        <input type="button" value=" 3 " onclick="calculator.answer.value += '3'" />
+                        <br/>
+                        
+                        <input type="button" value=" 4 " onclick="calculator.answer.value += '4'" />
+                        <input type="button" value=" 5 " onclick="calculator.answer.value += '5'" />
+                        <input type="button" value=" 6 " onclick="calculator.answer.value += '6'" />
+                        </br>
+                    
+                        <input type="button" value=" 7 " onclick="calculator.answer.value += '7'" />
+                        <input type="button" value=" 8 " onclick="calculator.answer.value += '8'" />
+                        <input type="button" value=" 9 " onclick="calculator.answer.value += '9'" />
+                        </br>
+                    
+                        <input type="button" value=" c " onclick="calculator.answer.value = ''" />
+                        <input type="button" value=" 0 " onclick="calculator.answer.value += '0'" />
+                        </br>
+            
+            
+                    </form>
+                    <div id="agh">
+                        <p>Adrian Gheorghe Calc
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+

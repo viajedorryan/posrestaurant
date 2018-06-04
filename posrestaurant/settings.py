@@ -25,7 +25,7 @@ SECRET_KEY = '+b@s@0-=v__-3sfx7=62-gtfx(b)8b6h0v!7x_p!p972*ky4+-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['192.168.254.113']
+# ALLOWED_HOSTS = ['192.168.254.100']
 ALLOWED_HOSTS = ['*']
 
 
@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'core',
     'web',
     'accounts',
     'restaurants',
+    'orderstation'
 ]
 
 MIDDLEWARE = [

@@ -26,7 +26,7 @@ class FoodMenu(models.Model):
     menuCategory        = models.CharField(max_length=255, blank=True, null=True)
     cost                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     price               = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    isVat               = models.BooleanField(default=False)  
+    isVat               = models.BooleanField(default=True)  
     date_created        = models.DateTimeField(auto_now_add=True, blank=True)
     date_updated        = models.DateTimeField(auto_now_add=True, blank=True)
 
@@ -71,10 +71,10 @@ class SalesTransactionSummary(models.Model):
     lastOR              = models.CharField(max_length=255, blank=True, null=True)
     lastTransactionNo   = models.CharField(max_length=255, blank=True, null=True)
     nextBeginningCash   = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
-    noOfSoldItem        = models.IntegerField(blank=True, null=True)
-    totalSoldItem       = models.IntegerField(blank=True, null=True)
-    noOfCancelledItem   = models.IntegerField(blank=True, null=True)
-    totalCancelledItem  = models.IntegerField(blank=True, null=True)
+    noOfSoldItem        = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    totalSoldItem       = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    noOfCancelledItem   = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    totalCancelledItem  = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     totalSales          = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     totalCashSales      = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     totalCash           = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
@@ -82,6 +82,7 @@ class SalesTransactionSummary(models.Model):
     openBy              = models.CharField(max_length=255, blank=True, null=True)
     closedBy            = models.CharField(max_length=255, blank=True, null=True)
     shortage            = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    notes               = models.TextField(blank=True, null=True)
     isVat               = models.BooleanField(default=False) 
     date_created        = models.DateTimeField(auto_now_add=True, blank=True)
     date_updated        = models.DateTimeField(auto_now_add=True, blank=True)
@@ -92,10 +93,9 @@ class SalesTransactionSummary(models.Model):
 class RestaurantTable(models.Model):
     tableNo             = models.CharField(max_length=255, blank=True, null=True)
     tableName           = models.CharField(max_length=255, blank=True, null=True)
-    tableStatus         = models.CharField(max_length=255, blank=True, null=True)
+    tableStatus         = models.CharField(max_length=255, blank=True, null=True, default='Available')
     isVat               = models.BooleanField(default=False) 
     addedBy             = models.CharField(max_length=255, blank=True, null=True)
-    updatedBy           = models.CharField(max_length=255, blank=True, null=True)
     date_created        = models.DateTimeField(auto_now_add=True, blank=True)
     date_updated        = models.DateTimeField(auto_now_add=True, blank=True)
 
@@ -190,7 +190,7 @@ class RestaurantOrderDetail(models.Model):
     isCancelled         = models.BooleanField(default=False)
     isVoid              = models.BooleanField(default=False)
     isErrorCorrect      = models.BooleanField(default=False)
-    isVat               = models.BooleanField(default=True)
+    isVat               = models.BooleanField(default=False)
     holdBy              = models.CharField(max_length=255, blank=True, null=True)
     cancelledBy         = models.CharField(max_length=255, blank=True, null=True)
     voidBy              = models.CharField(max_length=255, blank=True, null=True)
@@ -211,6 +211,7 @@ class RestaurantOrderSummary(models.Model):
     totalItem           = models.CharField(max_length=255, blank=True, null=True)
     totalItemSold       = models.CharField(max_length=255, blank=True, null=True)
     totalItemCancelled  = models.CharField(max_length=255, blank=True, null=True)
+    totalItemVoid       = models.CharField(max_length=255, blank=True, null=True)
     totalDiscount       = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     totalCharge         = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     totalUnitPrice      = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
@@ -227,11 +228,16 @@ class RestaurantOrderSummary(models.Model):
     amountChange        = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
     paymentType         = models.CharField(max_length=255, blank=True, null=True)
     isHold              = models.BooleanField(default=False)
+    isConfirmed         = models.BooleanField(default=False)
+    isCancelled         = models.BooleanField(default=False)
     isVoid              = models.BooleanField(default=False)
     isErrorCorrect      = models.BooleanField(default=False)
     isFloat             = models.BooleanField(default=True)
     isVat               = models.BooleanField(default=True)
     preparedBy          = models.CharField(max_length=255, blank=True, null=True)
+    holdBy              = models.CharField(max_length=255, blank=True, null=True)
+    cancelledBy         = models.CharField(max_length=255, blank=True, null=True)
+    voidBy              = models.CharField(max_length=255, blank=True, null=True)
     status              = models.CharField(max_length=255, blank=True, null=True)
     tableNo             = models.CharField(max_length=255, blank=True, null=True)
     orderType           = models.CharField(max_length=255, blank=True, null=True)
@@ -245,3 +251,44 @@ class RestaurantOrderSummary(models.Model):
 
     def __str__(self):
         return self.orderNo
+
+class SalesDenomination(models.Model):
+    branchCode          = models.CharField(max_length=255, blank=True, null=True)
+    transactionCode     = models.CharField(max_length=255, blank=True, null=True)
+    cashier             = models.CharField(max_length=255, blank=True, null=True)
+    no1k                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total1k             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no5h                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total5h             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no2h                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total2h             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no1h                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total1h             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no50p               = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total50p            = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no20p               = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total20p            = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no10p               = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total10p            = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no5p                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total5p             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no1p                = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total1p             = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    no25c               = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    total25c            = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+    date_created        = models.DateTimeField(auto_now_add=True, blank=True)
+    date_updated        = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return self.transactionCode
+    
+class Waiter(models.Model):
+    waiterCode          = models.CharField(max_length=255, blank=True, null=True)
+    waiterName          = models.CharField(max_length=255, blank=True, null=True)
+    isVat               = models.BooleanField(default=False) 
+    addedBy             = models.CharField(max_length=255, blank=True, null=True)
+    date_created        = models.DateTimeField(auto_now_add=True, blank=True)
+    date_updated        = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return self.waiterCode

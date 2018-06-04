@@ -1,0 +1,201 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container">
+        <section class="content-header text-center">
+            <img class="itcsi" src="{% static 'dist/img/restaurantlogo.png' %}" alt="User Image">
+            <h1><strong>CLOSE TRANSACTION</strong></h1>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-success" style="height: 630px;">
+                        <!-- <div class="box-header with-border">
+                            <h3 class="box-title">List of Food Menus</h3>
+                            <span><a href="#modal-addfoodmenu" class="btn btn-primary btn-sm pull-right" data-toggle="modal"><i class="fa fa-fw fa fa-plus"></i> Add Menu</a></span>
+                        </div> -->
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="col-xs-12">
+                                <div class="col-xs-3">
+                                    <div class="callout callout-default">
+                                        <p class="text-center text-muted">- Opened by</p>
+                        
+                                        <h4 class="text-center text-green text-bold text-capitalize">{{ request.user.username }}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="callout callout-default">
+                                        <p class="text-center text-muted">- Cash in Hand</p>
+                        
+                                        <h4 class="text-center text-green text-bold text-capitalize">{{ cashinhand }}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="callout callout-default">
+                                        <p class="text-center text-muted">- Opening Time</p>
+                        
+                                        <h4 class="text-center text-green text-bold text-capitalize">{{ timeopen | date:"d-M-Y D H:i:s A" }}</h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                        <div class="text-center text-muted"><img class="cash-register" src="{% static 'dist/img/cashregister.png' %}" alt="User Image"></div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <h3 class="text-bold text-green">Payments Summary</h3>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Payment Type</th>
+                                            <th>Cash Expected (₱)</th>
+                                            <th style="width: 300px">Cash Remitted (₱)</th>
+                                            <th>Differences (₱)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CASH</td>
+                                            <td class="text-bold">{{ gettotalcash }}</td>
+                                            <td>
+                                                <div class="col-xs-10 input-group">
+                                                    <div class="input-group-btn">
+                                                        <a href="#modal-addremit" class="addremit btn btn-success" data-toggle="modal"><i class="fa fa-fw fa-plus"></i> Add Remit</a>
+                                                    </div>
+                                                    <!-- /btn-group -->
+                                                    <input type="text" class="form-control" value="{{ cashremit }}" readonly>
+                                                </div>
+                                            </td>
+                                            <td class="text-bold">{{ getdifferences }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-xs-12">
+                                <h3 class="text-bold text-green">Transaction Summary</h3>
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Payment Type</th>
+                                            <th>Cash Expected (₱)</th>
+                                            <th style="width: 300px">Cash Remitted (₱)</th>
+                                            <th>Differences (₱)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CASH</td>
+                                            <td class="text-bold">{{ gettotalcash }}</td>
+                                            <td>
+                                                <div class="col-xs-10 input-group">
+                                                    <div class="input-group-btn">
+                                                        <a href="#modal-addremit" class="addremit btn btn-success" data-toggle="modal"><i class="fa fa-fw fa-plus"></i> Add Remit</a>
+                                                    </div>
+                                                    <!-- /btn-group -->
+                                                    <input type="text" class="form-control" value="{{ cashremit }}" readonly>
+                                                </div>
+                                            </td>
+                                            <td class="text-bold">{{ getdifferences }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <div class="col-xs-12">
+                                <h3 class="text-bold text-green">Notes</h3>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="notes" rows="7" placeholder="Notes ..."></textarea>
+                                </div>
+                            </div> -->
+                            
+                            <div class="col-xs-12">
+                                <hr>
+                                <!-- <button type="button" class="btn btn-danger btn-lg btn-block"><i class="fa fa-fw fa fa-close"></i> Close Transaction</a></button> -->
+                                <a href="#modal-closetransaction" class="closetransaction btn btn-danger btn-lg btn-block" data-toggle="modal"><i class="fa fa-fw fa-close"></i> Close Transaction</a>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal fade" id="modal-addremit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4>Add Total Cash to be Remitted</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:addcashremit' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <input type="hidden"  name="transcode" value="{{ gettransactioncode }}">
+                                        <label for="cashremit">Cash</label>
+                                        <input type="text" name="cashremit" id="cashremit" class="form-control" value="{{ cashremit }}" autofocus>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-closetransaction">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="site-form" action="{% url 'restaurants:closed' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="text-center text-bold">
+                                        <img class="cash-register" src="{% static 'dist/img/warning.png' %}" alt="User Image">
+                                        <br>
+                                        <h1>Are you sure ?</h1>
+                                        <br>
+                                        <h4 class="text-center text-muted">You will not able to recover the Holds later?</h4>
+                                    </div>
+                                    <input type="hidden"  name="transcode" value="{{ gettransactioncode }}">
+                                    <input type="hidden"  name="totalcash" value="{{ gettotalcash }}">
+                                    <input type="hidden"  name="shortage" value="{{ getdifferences }}">
+                                    <input type="hidden"  name="totalqty" value="{{ gettotalqty }}">
+
+                                    <!-- <div class="form-group">
+                                        <input type="hidden"  name="transcode" value="{{ gettransactioncode }}">
+                                        <label for="cashremit">Cash</label>
+                                        <input type="text" name="cashremit" id="cashremit" class="form-control" placeholder="Input Total Cash to be Remitted ..." autofocus>
+                                    </div> -->
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-xs-6">
+                                <button type="button" class="btn btn-default btn-lg btn-block" data-dismiss="modal">Close</button>
+                            </div>
+                            <div class="col-xs-6">
+                                <input type="submit" class="btn btn-danger btn-lg btn-block" value="Yes, Close it!"></input>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+</div>
+{% endblock %}
+

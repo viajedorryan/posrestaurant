@@ -1,0 +1,149 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container">
+        <section class="content-header text-center">
+            <img class="itcsi" src="{% static 'dist/img/restaurantlogo.png' %}" alt="User Image">
+            <h1><strong>TABLES</strong></h1>
+        </section>
+        
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-success" style="height: 550px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">List of Tables</h3>
+                            <span><a href="#modal-addtable" class="btn btn-primary btn-sm pull-right" data-toggle="modal"><i class="fa fa-fw fa fa-plus"></i> Add Table</a></span>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px">Table #</th>
+                                        <th style="width: 100px">Table Status</th>
+                                        <th style="width: 2px">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for gettablelist in gettablelists %}
+                                    <tr>
+                                        <td>{{ gettablelist.tableNo }}</td>
+                                        <td>{{ gettablelist.tableStatus }}</td>
+                                        <td>
+                                            <a href="#modal-edittable" class="edittable btn btn-info btn-sm pull-left" data-toggle="modal" data-id="{{gettablelist.id}}" data-name="{{gettablelist.tableNo}}"><i class="fa fa-fw fa-pencil"></i> Edit</a>
+                                            &nbsp;
+                                            <a href="#modal-deletetable" class="deletetable btn btn-danger btn-sm" data-toggle="modal" data-id="{{gettablelist.id}}" data-name="{{gettablelist.tableNo}}"><i class="fa fa-fw fa-trash"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table> 
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal fade" id="modal-addtable">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4>Add Table</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:addtable' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="tableno">Table Number</label>
+                                        <input type="text" name="tableno" class="form-control" placeholder="Input Table Number..." autofocus>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-edittable">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4>Edit Table</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:edittable' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <input type="hidden" name="idno" id="idno">
+                                        <label for="tableno">Table Number</label>
+                                        <input type="text" name="tableno" id="tableno" class="form-control" autofocus>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+        <div class="modal fade" id="modal-deletetable">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                        <h4>Delete Table</h4>
+                    </div>
+                    <form class="site-form form-horizontal" action="{% url 'restaurants:deletetable' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <input type="hidden" name="idno" id="idno">
+                                        <h3 class="text-center">Are you sure you want to DELETE this Table?</h3>
+                                        <label for="tableno" class="col-sm-3 control-label">Table Number</label>
+                                        <div class="col-sm-9">
+                                          <input type="text" class="form-control" name="tableno" id="tableno" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+</div>
+{% endblock %}
+

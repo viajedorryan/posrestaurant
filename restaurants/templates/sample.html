@@ -1,0 +1,39 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    {% include 'includes/_nav_restaurant.html' %}
+    <div class="container-fluid">
+
+        <div class="modal fade" id="donepayment">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Payment Success</h4>
+                    </div>
+                    <form class="site-form" action="{% url 'restaurants:dines' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <h3><strong>Amount Tendered: <span class="text-blue">{{ amounttender }}</span></strong></h3>
+                                    <h3><strong>Change: <span class="text-red">{{ amountChange }}</span></strong></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Press this BUTTON to Continue Next Transaction"></input>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+    </div>
+</div>
+{% endblock %}
+

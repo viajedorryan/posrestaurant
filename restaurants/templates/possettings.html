@@ -1,0 +1,90 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container">
+        <section class="content-header text-center">
+            <img class="itcsi" src="{% static 'dist/img/restaurantlogo.png' %}" alt="User Image">
+            <h1><strong>POS Settings</strong></h1>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box box-success">
+                        <div class="box-header">
+                            <h3 class="box-title">Update POS Settings</h3>
+                        </div>
+                        
+                        {% if messages %}
+                                {% for message in messages %}
+                                    <p class="text-success text-center text-bold">*{{ message }}</p>
+                                {% endfor %}
+                        {% endif %}
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form class="site-form" action="{% url 'restaurants:editpossettings' %}" method="post">
+                            {% csrf_token %}
+                            <div class="box-body">
+                                <div class="row">
+                                {% for possetting in possettings %}
+                                    <div class="col-xs-12">
+                                        <div class="form-group">
+                                            <label for="branchcode">Branch Code</label>
+                                            <input type="branchcode" class="form-control" name="branchcode" id="branchcode" value="{{ possetting.branchCode }}" placeholder="Enter Branch Code" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="companyname">Company Name</label>
+                                            <input type="companyname" class="form-control" name="companyname" id="companyname" value="{{ possetting.companyName }}" placeholder="Enter Company Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="addone">Address 1</label>
+                                            <input type="addone" class="form-control" name="addone" id="addone" value="{{ possetting.address1 }}" placeholder="Enter Address 1">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="addtwo">Address 2</label>
+                                            <input type="addtwo" class="form-control" name="addtwo" id="addtwo" value="{{ possetting.address2 }}" placeholder="Enter Address 2">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="tinno">TIN No</label>
+                                            <input type="tinno" class="form-control" name="tinno" id="tinno" value="{{ possetting.tinNo }}" placeholder="Enter TIN No">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="minno">MIN No</label>
+                                            <input type="minno" class="form-control" name="minno" id="minno" value="{{ possetting.minNo }}" placeholder="Enter MIN No">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="birno">BIR Permit No</label>
+                                            <input type="birno" class="form-control" name="birno" id="birno" value="{{ possetting.birPermitNo }}" placeholder="Enter BIR Permit No">
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="form-group">
+                                            <label for="serialno">Serial No</label>
+                                            <input type="serialno" class="form-control" name="serialno" id="serialno" value="{{ possetting.serialNo }}" placeholder="Enter Serial No">
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                        
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-lg btn-primary btn-block btn-flat">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'restaurant_base.html'%}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="container">
+        <section class="content-header text-center">
+            <img class="itcsi" src="{% static 'dist/img/restaurantlogo.png' %}" alt="User Image">
+            <h1><strong>SALES</strong></h1>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#sold" data-toggle="tab">SOLD</a></li>
+                            <li><a href="#pending" data-toggle="tab">PENDING</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="sold">
+                                <div class="box box-success">
+                                    <!-- <div class="box-header">
+                                        <h3 class="box-title">Data Table With Full Features</h3>
+                                    </div> -->
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <table id="example1" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Order #</th>
+                                                    <th>Total Items</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Amount Tendered</th>
+                                                    <th>Amount Change</th>
+                                                    <th>Prepared By</th>
+                                                    <th>Order Type</th>
+                                                    <th>Status</th>
+                                                    <th>DateTime Sold</th>
+                                                    <th style="width: 100px">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for getsoldsale in getsoldsales %}
+                                                <tr>
+                                                    <td>{{ getsoldsale.orderNo }}</td>
+                                                    <td>{{ getsoldsale.totalItem }}</td>
+                                                    <td>{{ getsoldsale.totalAmount }}</td>
+                                                    <td>{{ getsoldsale.amountTendered }}</td>
+                                                    <td>{{ getsoldsale.amountChange }}</td>
+                                                    <td>{{ getsoldsale.preparedBy }}</td>
+                                                    <td>{{ getsoldsale.orderType }}</td>
+                                                    <td><span class="badge bg-green">{{ getsoldsale.status }}</span></td>
+                                                    <td>{{ getsoldsale.date_created | date:"d-M-Y D H:i:s A"}}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-gear"></i> Action</button>
+                                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                                                <span class="caret"></span>
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li class="text-center">
+                                                                    <form class="site-form" action="{% url 'restaurants:generatereceipt' %}" method="post" target="_blank">
+                                                                    {% csrf_token %}
+                                                                        <input type="hidden" name="orderNo" value="{{ getsoldsale.orderNo }}">
+                                                                        <button type="submit" class="btn btn-warning btn-sm"><i class="fa fa-fw fa-ticket"></i> GENERATE RECEIPT</button>
+                                                                    </form>
+                                                                </li>
+                                                                <li class="divider"></li>
+                                                                <li class="text-center">
+                                                                    <form class="site-form" action="{% url 'restaurants:generatebill' %}" method="post" target="_blank">
+                                                                    {% csrf_token %}
+                                                                        <input type="hidden" name="orderNo" value="{{ getsoldsale.orderNo }}">
+                                                                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-sticky-note"></i> GENERATE BILL</button>
+                                                                    </form>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <!-- <button type="button" class="btn btn-warning btn-xs pull-left"><i class="fa fa-fw fa-ticket"></i> PRINT RECEIPT</button>
+                                                        <button type="button" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa-sticky-note"></i> PRINT BILL</button> -->
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+                            </div>
+                            <div class="tab-pane" id="pending">
+                                <div class="box box-success">
+                                    <!-- <div class="box-header">
+                                        <h3 class="box-title">Data Table With Full Features</h3>
+                                    </div> -->
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <table id="example2" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Reference #</th>
+                                                    <th>Total Items</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Table #</th>
+                                                    <th>Prepared By</th>
+                                                    <th>Order Type</th>
+                                                    <th>Status</th>
+                                                    <th>DateTime Ordered</th>
+                                                    <th style="width: 100px">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for getpendingsale in getpendingsales %}
+                                                <tr>
+                                                    <td>{{ getpendingsale.referenceNo }}</td>
+                                                    <td>{{ getpendingsale.totalItem }}</td>
+                                                    <td>{{ getpendingsale.totalAmount }}</td>
+                                                    <td>{{ getpendingsale.tableNo }}</td>
+                                                    <td>{{ getpendingsale.preparedBy }}</td>
+                                                    <td>{{ getpendingsale.orderType }}</td>
+                                                    <td><span class="badge bg-red">{{ getpendingsale.status }}</span></td>
+                                                    <td>{{ getpendingsale.date_created | date:"d-M-Y D H:i:s A"}}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-gear"></i> Action</button>
+                                                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                                                <span class="caret"></span>
+                                                                <span class="sr-only">Toggle Dropdown</span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" role="menu">
+                                                                <li class="text-center">
+                                                                    <form class="site-form" action="{% url 'restaurants:bill' %}" method="post" target="_blank">
+                                                                    {% csrf_token %}
+                                                                        <input type="hidden" name="tableNo" value="{{ getpendingsale.tableNo }}">
+                                                                        <input type="hidden" name="orderNo" value="{{ getpendingsale.referenceNo }}">
+                                                                        <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-sticky-note"></i> GENERATE BILL</button>
+                                                                    </form>
+                                                                </li>
+                                                                <li class="divider"></li>
+                                                                <li class="text-center">
+                                                                    <a href="{% url 'restaurants:billing' tableNo=getpendingsale.tableNo %}" class="btn btn-success btn-sm">GO TO PAYMENT</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

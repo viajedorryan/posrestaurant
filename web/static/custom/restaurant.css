@@ -1,5 +1,31 @@
-/* div#maindish,
-div#beverages,
-div#soups {
-    display: -webkit-box;
-} */
+img.itcsi-dash {
+    width: 100px !important;
+    height: auto !important;
+    margin-top: -16px;
+}
+img.itcsi {
+    width: 250px !important;
+    height: auto !important;
+    margin-top: -10px;
+}
+img.cash-register {
+    width: 150px !important;
+    height: auto !important;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #00a65a !important;
+}
+.btn-app {
+    font-size: 14px !important;
+    text-transform: uppercase;
+}
+.dropdown-menu>li>a {
+    color: #fff !important;
+}
+.dropdown-menu>li>a:hover {
+    background-color: #008d4c !important;
+    color: #fff !important;
+}
+.checkbox label{
+    font-weight: 700 !important;
+}

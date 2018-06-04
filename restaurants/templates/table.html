@@ -3,10 +3,11 @@
 
 {% block content %}
 <div class="content-wrapper">
+    {% include 'includes/_nav_restaurant.html' %}
     <div class="container-fluid">
         <section class="content-header text-center">
             <h1><strong>DINE-IN </strong></h1>
-            <h1><span class="label label-info"><strong>Table {{tables}}</strong></span></h1>
+            <h1><span class="label label-success"><strong>Table {{tables}}</strong></span></h1>
         </section>
 
         <section class="content">
@@ -33,8 +34,37 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-lg-2">
+                    <div class="box box-success" style="height: 700px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Actions</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="col-sm-12">
+                                <form class="site-form" action="{% url 'restaurants:savefoodmenu' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block margin-bottom">SAVE</button>
+                                </form>
+                            </div>
+                            <div class="col-sm-12">
+                                <a href="{% url 'restaurants:void' %}" type="button" class="btn btn-warning btn-lg btn-block margin-bottom">VOID</a>
+                            </div>
+                            <div class="col-sm-12">
+                                <form class="site-form" action="{% url 'restaurants:transvoidfoodmenu' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tableNo" value="{{tables}}">
+                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                    <button type="submit" class="btn btn-danger btn-lg btn-block margin-bottom">TRANSACTION VOID</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-4">
-                    <div class="box box-primary" style="height: 500px;">
+                    <div class="box box-success" style="height: 550px;">
                         <div class="box-header with-border">
                             <h3 class="box-title">Orders</h3>
                         </div>
@@ -72,10 +102,11 @@
                                                     <div>
                                                         <form class="site-form" action="{% url 'restaurants:cancelfoodmenu' %}" method="post">
                                                             {% csrf_token %}
+                                                            <input type="hidden" name="idno" value="{{tempOrderDetailpage.id}}">
                                                             <input type="hidden" name="tableNo" value="{{tempOrderDetailpage.tableNo}}">
-                                                            <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
-                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}">
-                                                            <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-trash"></i></button>
+                                                            <!-- <input type="hidden" name="refNo" value="{{ tempOrderDetailpage.referenceNo }}">
+                                                            <input type="hidden" name="prodCode" value="{{ tempOrderDetailpage.productCode }}"> -->
+                                                            <button type="submit" class="btn btn-danger btn-xs pull-right"><i class="fa fa-fw fa fa-times"></i></button>
                                                         </form>
                                                     </div>
                                                 </td>
@@ -145,84 +176,172 @@
                             <h4>VAT: {{ totalVAT | floatformat:2 }}</h4>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="col-sm-6">
-                            <a href="{% url 'restaurants:dines' %}" type="button" class="btn btn-danger btn-lg btn-block margin-bottom">CANCEL</a>
+                </div>
+                <div class="col-lg-6">
+                    <div class="box box-success" style="height: 700px;">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Menus</h3>
                         </div>
-                        <div class="col-sm-6">
-                            <form class="site-form" action="{% url 'restaurants:savefoodmenu' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="tableNo" value="{{tables}}">
-                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
-                                <button type="submit" class="btn btn-success btn-lg btn-block margin-bottom">SAVE</button>
-                            </form>
+                        <!-- /.box-header -->
+                        <div class="box-body" style="height: 600px; overflow-y: scroll;">
+                            <!-- <div class="panel panel-primary">
+                                <div class="panel-heading">Main Dish</div>
+                                <div class="panel-body">
+                                    {% for menu in menus %}
+                                        {% if menu.menuCategory == 'MAIN DISH' %}
+                                        <div class="col-sm-3 margin-bottom">
+                                            <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a>
+                                            <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="tableNo" value="{{tables}}">
+                                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                                <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                <button type="submit" class="btn btn-app bg-green btn-block btn-lg btn-block text-center text-bold">{{ menu.foodMenu }}</button>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Beverages</div>
+                                <div class="panel-body">
+                                    {% for menu in menus %}
+                                        {% if menu.menuCategory == 'BEVERAGES' %}
+                                        <div class="col-sm-3 margin-bottom">
+                                            <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-beverages"><b>{{ menu.foodMenu }}</b></a>
+                                            <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="tableNo" value="{{tables}}">
+                                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                                <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                <button type="submit" class="btn btn-app bg-green btn-block btn-lg btn-block text-center text-bold">{{ menu.foodMenu }}</button>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Soups</div>
+                                <div class="panel-body">
+                                    {% for menu in menus %}
+                                        {% if menu.menuCategory == 'SOUPS' %}
+                                        <div class="col-sm-3 margin-bottom">
+                                            <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-soups"><b>{{ menu.foodMenu }}</b></a>
+                                            <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="tableNo" value="{{tables}}">
+                                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                                <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                <button type="submit" class="btn btn-app bg-green btn-block btn-lg btn-block text-center text-bold">{{ menu.foodMenu }}</button>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div> -->
+                            <!--  -->
+                            {% for category in categories %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">{{category.categoryName}}</div>
+                                <div class="panel-body">
+                                    {% for menu in menus %}
+                                        {% if menu.menuCategory == category.categoryName %}
+                                        <div class="col-sm-3 margin-bottom">
+                                            <!-- <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a> -->
+                                            <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="tableNo" value="{{tables}}">
+                                                <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                                <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                                <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                                <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                                <button type="submit" class="btn btn-app bg-green btn-block btn-lg btn-block text-center text-bold">{{ menu.foodMenu }}</button>
+                                            </form>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-8">
-                <div class="nav-tabs-custom" style="height: 700px;">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#maindish" data-toggle="tab">Main Dish</a></li>
-                        <li><a href="#beverages" data-toggle="tab">Beverages</a></li>
-                        <li><a href="#soups" data-toggle="tab">Soups</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="active tab-pane" id="maindish">
-                        {% for menu in menus %}
-                            {% if menu.menuCategory == 'MAIN DISH' %}
-                            <div class="col-sm-3">
-                                <!-- <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="tableNo" value="{{tables}}">
-                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
-                                    <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
-                                    <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
-                                    <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
-                                    <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
-                                </form>
+                    <!-- <div class="nav-tabs-custom" style="height: 700px;">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#maindish" data-toggle="tab">Main Dish</a></li>
+                            <li><a href="#beverages" data-toggle="tab">Beverages</a></li>
+                            <li><a href="#soups" data-toggle="tab">Soups</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Panel heading without title</div>
+                                <div class="panel-body">
+                                    Panel content
+                                </div>
                             </div>
-                            {% endif %}
-                        {% endfor %}
-                        </div>
-                        <div class="tab-pane" id="beverages">
-                        {% for menu in menus %}
-                            {% if menu.menuCategory == 'BEVERAGES' %}
-                            <div class="col-sm-3">
-                                <!-- <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-beverages"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="tableNo" value="{{tables}}">
-                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
-                                    <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
-                                    <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
-                                    <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
-                                    <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
-                                </form>
+                            <div class="active tab-pane" id="maindish">
+                            {% for menu in menus %}
+                                {% if menu.menuCategory == 'MAIN DISH' %}
+                                <div class="col-sm-3">
+                                    <a href="#modal-maindish" class="main btn btn-primary btn-block btn-lg" data-toggle="modal" data-id="{{ menu.FoodMenu }}"><b>{{ menu.foodMenu }}</b></a>
+                                    <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                        <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                        <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
                             </div>
-                            {% endif %}
-                        {% endfor %}
-                        </div>
-                        <div class="tab-pane" id="soups">
-                        {% for menu in menus %}
-                            {% if menu.menuCategory == 'SOUPS' %}
-                            <div class="col-sm-3">
-                                <!-- <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-soups"><b>{{ menu.foodMenu }}</b></a> -->
-                                <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="tableNo" value="{{tables}}">
-                                    <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
-                                    <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
-                                    <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
-                                    <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
-                                    <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
-                                </form>
+                            <div class="tab-pane" id="beverages">
+                            {% for menu in menus %}
+                                {% if menu.menuCategory == 'BEVERAGES' %}
+                                <div class="col-sm-3">
+                                    <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-beverages"><b>{{ menu.foodMenu }}</b></a>
+                                    <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                        <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                        <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
                             </div>
-                            {% endif %}
-                        {% endfor %}
+                            <div class="tab-pane" id="soups">
+                            {% for menu in menus %}
+                                {% if menu.menuCategory == 'SOUPS' %}
+                                <div class="col-sm-3">
+                                    <a href="#" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#modal-soups"><b>{{ menu.foodMenu }}</b></a>
+                                    <form class="site-form" action="{% url 'restaurants:addfoodmenu' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="tableNo" value="{{tables}}">
+                                        <input type="hidden" name="refNo" value="{{ totalTempOrderSummaries }}">
+                                        <input type="hidden" name="prodCode" value="{{ menu.foodCode }}">
+                                        <input type="hidden" name="foodDesc" value="{{ menu.foodMenu }}">
+                                        <input type="hidden" name="foodSellPrice" value="{{ menu.price }}">
+                                        <button type="submit" class="btn btn-info btn-lg btn-block text-center">{{ menu.foodMenu }}</button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </div> -->
                 </div>
             </div>
         </section>
